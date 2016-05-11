@@ -1,0 +1,26 @@
+{#- pillar info gathered from command line #}
+{%- set type = pillar.get('type', 'stable') %}
+{%- set stage = pillar.get('stage' '') %}
+{%- set name = pillar.get('name', 'FhaUjihb9H4') %}
+{%- set provider = pillar.get('provider') %}
+{%- set profiles = pillar.get('profiles', []) %}
+
+{#- distro lists #}
+{%- set ec2_distros = ['rhel-6', 'rhel-6-x32', 'rhel-7.1', 'rhel-7.2', 'suse-11', 'suse-12', 'amazon-6', 'oracle-6'] %}
+{%- set do_distros = ['centos-5', 'centos-5-x32', 'centos-6', 'centos-6-x32', 'centos-7', 'fedora-22', 'fedora-23', 'debian-8', 'ubuntu-12', 'ubuntu-14', 'ubuntu-16', 'freebsd-10.1', 'freebsd-10.2'] %}
+{%- set distros = {'ec2': ec2_distros, 'do': do_distros} %}
+
+{%- if provider %}
+  {%- if profiles %}
+    {%- set distros = {provider: profiles} %}
+  {%- else %}
+    {%- set distros = {provider: distros[provider]} %}
+  {%- endif %}
+{%- endif %}
+
+{#- cloud action can be either to create or destroy VMs #}
+{%- if stage == 'present' %}
+  {%- set action = 'present' %}
+{%- elif stage == 'absent' %}
+  {%- set action = 'absent' %}
+{%- endif %}
